@@ -1,0 +1,113 @@
+/*!
+  name: Sepia
+  swatch-light: #96481a, #f4ece0
+  swatch-dark: #e09a56, #211c18
+*/
+
+/* Sepia - warm paper and terracotta headings, easy on the eyes.
+
+   Palette data only. css/book.css maps --l-* and --d-* onto the
+   semantic tokens and handles light/dark switching. Every pair that
+   carries text meets WCAG AA in both modes. */
+
+:root {  /* Light */
+  /* surfaces */
+  --l-bg: #fbf7f0;
+  --l-bg-elevated: #fdfaf5;
+  --l-bg-sidebar: #f4ece0;
+  --l-bg-topbar: rgba(251, 247, 240, 0.85);
+  --l-bg-hover: #ebdfcd;
+  --l-bg-active: #e9dcc2;
+  --l-bg-code: #f5ece0;
+  --l-bg-inline-code: #efe4d3;
+  --l-bg-quote: #f4ece0;
+
+  /* text */
+  --l-fg: #2e2620;
+  --l-fg-strong: #1a1512;
+  --l-fg-muted: #5b4f43;
+  --l-fg-faint: #6b5d4f;
+  --l-fg-heading: #2b211a;
+  --l-fg-h1: #221910;
+  --l-fg-h2: #8a3f16;
+  --l-fg-h3: #95501f;
+  --l-fg-code: #2e2620;
+  --l-fg-inline-code: #8a3f16;
+
+  /* accent and links */
+  --l-accent: #96481a;
+  --l-accent-contrast: #fff8ef;
+  --l-link: #8f4517;
+  --l-link-hover: #663009;
+  --l-link-visited: #6e3f80;
+
+  /* lines and overlays */
+  --l-border: #e0d3c0;
+  --l-border-strong: #bda992;
+  --l-border-code: #e5d9c8;
+  --l-shadow-md: 0 8px 24px rgba(60, 42, 25, 0.18);
+  --l-scrim: rgba(45, 33, 20, 0.42);
+
+  /* syntax */
+  --l-syn-comment: #6f6255;
+  --l-syn-keyword: #8a3070;
+  --l-syn-string: #3c6112;
+  --l-syn-number: #8a4405;
+  --l-syn-function: #6b3f8a;
+  --l-syn-type: #1f5570;
+  --l-syn-operator: #54483d;
+  --l-syn-variable: #993a1f;
+  --l-syn-error: #a52020;
+  --l-syn-warning: #7a5200;
+}
+
+:root {  /* Dark */
+  /* surfaces */
+  --d-bg: #1b1714;
+  --d-bg-elevated: #26201b;
+  --d-bg-sidebar: #211c18;
+  --d-bg-topbar: rgba(27, 23, 20, 0.86);
+  --d-bg-hover: #2d2620;
+  --d-bg-active: #3b2c1e;
+  --d-bg-code: #211c18;
+  --d-bg-inline-code: #2b241d;
+  --d-bg-quote: #221d19;
+
+  /* text */
+  --d-fg: #e4dace;
+  --d-fg-strong: #f6efe4;
+  --d-fg-muted: #ab9d8c;
+  --d-fg-faint: #998b7a;
+  --d-fg-heading: #f0e7da;
+  --d-fg-h1: #f6efe4;
+  --d-fg-h2: #e5a163;
+  --d-fg-h3: #dbae7f;
+  --d-fg-code: #e4dace;
+  --d-fg-inline-code: #e8ac72;
+
+  /* accent and links */
+  --d-accent: #e09a56;
+  --d-accent-contrast: #1b1105;
+  --d-link: #e9a768;
+  --d-link-hover: #f3c69a;
+  --d-link-visited: #cbaae0;
+
+  /* lines and overlays */
+  --d-border: #332b24;
+  --d-border-strong: #544738;
+  --d-border-code: #2e2720;
+  --d-shadow-md: 0 10px 30px rgba(0, 0, 0, 0.6);
+  --d-scrim: rgba(10, 7, 4, 0.6);
+
+  /* syntax */
+  --d-syn-comment: #9c8e7e;
+  --d-syn-keyword: #eba2d2;
+  --d-syn-string: #a8cf7a;
+  --d-syn-number: #eeb46e;
+  --d-syn-function: #cfaef0;
+  --d-syn-type: #84c4d8;
+  --d-syn-operator: #b5a795;
+  --d-syn-variable: #f0a482;
+  --d-syn-error: #f28b8b;
+  --d-syn-warning: #dfc274;
+}

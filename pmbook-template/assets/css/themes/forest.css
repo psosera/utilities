@@ -1,0 +1,113 @@
+/*!
+  name: Forest
+  swatch-light: #3d6b2b, #eef3e9
+  swatch-dark: #87c463, #151c14
+*/
+
+/* Forest - muted greens with deep-green headings.
+
+   Palette data only. css/book.css maps --l-* and --d-* onto the
+   semantic tokens and handles light/dark switching. Every pair that
+   carries text meets WCAG AA in both modes. */
+
+:root {  /* Light */
+  /* surfaces */
+  --l-bg: #f9fbf7;
+  --l-bg-elevated: #ffffff;
+  --l-bg-sidebar: #eef3e9;
+  --l-bg-topbar: rgba(249, 251, 247, 0.85);
+  --l-bg-hover: #e2ead9;
+  --l-bg-active: #dde8cf;
+  --l-bg-code: #f1f6ec;
+  --l-bg-inline-code: #e8f0e0;
+  --l-bg-quote: #f0f5eb;
+
+  /* text */
+  --l-fg: #232a20;
+  --l-fg-strong: #0f140d;
+  --l-fg-muted: #525c4a;
+  --l-fg-faint: #616b58;
+  --l-fg-heading: #1a2416;
+  --l-fg-h1: #141d10;
+  --l-fg-h2: #2f5828;
+  --l-fg-h3: #3a6630;
+  --l-fg-code: #232a20;
+  --l-fg-inline-code: #33582b;
+
+  /* accent and links */
+  --l-accent: #3d6b2b;
+  --l-accent-contrast: #f7fbf4;
+  --l-link: #3a6428;
+  --l-link-hover: #28471a;
+  --l-link-visited: #6b4090;
+
+  /* lines and overlays */
+  --l-border: #dde5d3;
+  --l-border-strong: #b0bda2;
+  --l-border-code: #e3ebd9;
+  --l-shadow-md: 0 8px 24px rgba(24, 38, 18, 0.15);
+  --l-scrim: rgba(18, 28, 13, 0.42);
+
+  /* syntax */
+  --l-syn-comment: #5f6a57;
+  --l-syn-keyword: #8a2b74;
+  --l-syn-string: #1f5f2e;
+  --l-syn-number: #8a4405;
+  --l-syn-function: #65398f;
+  --l-syn-type: #155a76;
+  --l-syn-operator: #474f41;
+  --l-syn-variable: #94331f;
+  --l-syn-error: #a51f1f;
+  --l-syn-warning: #725000;
+}
+
+:root {  /* Dark */
+  /* surfaces */
+  --d-bg: #101510;
+  --d-bg-elevated: #1b241a;
+  --d-bg-sidebar: #151c14;
+  --d-bg-topbar: rgba(16, 21, 16, 0.86);
+  --d-bg-hover: #1f291d;
+  --d-bg-active: #28381f;
+  --d-bg-code: #151c14;
+  --d-bg-inline-code: #1d271b;
+  --d-bg-quote: #161e15;
+
+  /* text */
+  --d-fg: #d8e0d2;
+  --d-fg-strong: #eff5eb;
+  --d-fg-muted: #9dab95;
+  --d-fg-faint: #8b9a83;
+  --d-fg-heading: #e6eee1;
+  --d-fg-h1: #eff5eb;
+  --d-fg-h2: #9fd47f;
+  --d-fg-h3: #b7de9d;
+  --d-fg-code: #d8e0d2;
+  --d-fg-inline-code: #a8d98a;
+
+  /* accent and links */
+  --d-accent: #87c463;
+  --d-accent-contrast: #0a1206;
+  --d-link: #96cf75;
+  --d-link-hover: #bde2a5;
+  --d-link-visited: #c4aeee;
+
+  /* lines and overlays */
+  --d-border: #242f22;
+  --d-border-strong: #455040;
+  --d-border-code: #202a1e;
+  --d-shadow-md: 0 10px 30px rgba(0, 0, 0, 0.6);
+  --d-scrim: rgba(4, 9, 3, 0.6);
+
+  /* syntax */
+  --d-syn-comment: #8f9d88;
+  --d-syn-keyword: #e59ddb;
+  --d-syn-string: #8fd98f;
+  --d-syn-number: #eeb573;
+  --d-syn-function: #c3a9f0;
+  --d-syn-type: #7cc6e0;
+  --d-syn-operator: #a7b3a1;
+  --d-syn-variable: #f2a487;
+  --d-syn-error: #f58c8c;
+  --d-syn-warning: #ddc06d;
+}

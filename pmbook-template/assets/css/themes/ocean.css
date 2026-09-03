@@ -1,0 +1,113 @@
+/*!
+  name: Ocean
+  swatch-light: #0a6a85, #e9f2f5
+  swatch-dark: #3fbdd6, #101f24
+*/
+
+/* Ocean - cool blue-green surfaces with deep teal headings.
+
+   Palette data only. css/book.css maps --l-* and --d-* onto the
+   semantic tokens and handles light/dark switching. Every pair that
+   carries text meets WCAG AA in both modes. */
+
+:root {  /* Light */
+  /* surfaces */
+  --l-bg: #f4fafb;
+  --l-bg-elevated: #ffffff;
+  --l-bg-sidebar: #e9f2f5;
+  --l-bg-topbar: rgba(248, 251, 252, 0.85);
+  --l-bg-hover: #dceaef;
+  --l-bg-active: #d2e6ed;
+  --l-bg-code: #eef5f7;
+  --l-bg-inline-code: #e4eff3;
+  --l-bg-quote: #edf5f7;
+
+  /* text */
+  --l-fg: #1c2a2f;
+  --l-fg-strong: #0b1518;
+  --l-fg-muted: #4d5f66;
+  --l-fg-faint: #5c6e75;
+  --l-fg-heading: #12262c;
+  --l-fg-h1: #0d1f24;
+  --l-fg-h2: #08606f;
+  --l-fg-h3: #0a6e7e;
+  --l-fg-code: #1c2a2f;
+  --l-fg-inline-code: #0a5468;
+
+  /* accent and links */
+  --l-accent: #076c7d;
+  --l-accent-contrast: #f4fbfd;
+  --l-link: #0a6076;
+  --l-link-hover: #064454;
+  --l-link-visited: #5c4a94;
+
+  /* lines and overlays */
+  --l-border: #d3e2e7;
+  --l-border-strong: #a6bcc4;
+  --l-border-code: #dbe8ec;
+  --l-shadow-md: 0 8px 24px rgba(12, 40, 50, 0.16);
+  --l-scrim: rgba(9, 28, 35, 0.42);
+
+  /* syntax */
+  --l-syn-comment: #5c6f76;
+  --l-syn-keyword: #8a2b7d;
+  --l-syn-string: #0d6141;
+  --l-syn-number: #8a4205;
+  --l-syn-function: #5f3f96;
+  --l-syn-type: #0f5578;
+  --l-syn-operator: #434f54;
+  --l-syn-variable: #96331f;
+  --l-syn-error: #a71f1f;
+  --l-syn-warning: #755100;
+}
+
+:root {  /* Dark */
+  /* surfaces */
+  --d-bg: #0c161a;
+  --d-bg-elevated: #16262c;
+  --d-bg-sidebar: #101f24;
+  --d-bg-topbar: rgba(12, 22, 26, 0.86);
+  --d-bg-hover: #1a2d34;
+  --d-bg-active: #153b47;
+  --d-bg-code: #101f24;
+  --d-bg-inline-code: #182b32;
+  --d-bg-quote: #122127;
+
+  /* text */
+  --d-fg: #d0e0e5;
+  --d-fg-strong: #eef7fa;
+  --d-fg-muted: #93a9b1;
+  --d-fg-faint: #82989f;
+  --d-fg-heading: #e2eff3;
+  --d-fg-h1: #eef7fa;
+  --d-fg-h2: #52d0dd;
+  --d-fg-h3: #85dde6;
+  --d-fg-code: #d0e0e5;
+  --d-fg-inline-code: #7fd0e2;
+
+  /* accent and links */
+  --d-accent: #3fbdd6;
+  --d-accent-contrast: #04171c;
+  --d-link: #5cc9de;
+  --d-link-hover: #96dded;
+  --d-link-visited: #b7a8ea;
+
+  /* lines and overlays */
+  --d-border: #20343b;
+  --d-border-strong: #3c545d;
+  --d-border-code: #1c2f36;
+  --d-shadow-md: 0 10px 30px rgba(0, 0, 0, 0.6);
+  --d-scrim: rgba(2, 12, 16, 0.6);
+
+  /* syntax */
+  --d-syn-comment: #879ba3;
+  --d-syn-keyword: #e79ada;
+  --d-syn-string: #79dfae;
+  --d-syn-number: #f0b477;
+  --d-syn-function: #bda7f2;
+  --d-syn-type: #6ec7ea;
+  --d-syn-operator: #a2b3ba;
+  --d-syn-variable: #f5a68c;
+  --d-syn-error: #f78c8c;
+  --d-syn-warning: #dfc06d;
+}

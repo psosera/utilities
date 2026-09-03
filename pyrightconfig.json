@@ -1,0 +1,10 @@
+{
+  "reportAny": false,
+  "reportExplicitAny": false,
+  "reportUnknownVariableType": false,
+  "reportUnknownArgumentType": false,
+  "reportUnknownMemberType": false,
+  "reportMatchNotExhaustive": false,
+  "reportUnusedCallResult": false,
+  "reportMissingModuleSource": false
+}
