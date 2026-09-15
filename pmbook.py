@@ -233,15 +233,21 @@ def list_items(block: Json) -> list[Json]:
             return []
 
 def read_entry(blocks: list[Json]) -> TocNode:
-    '''Read the `blocks` of one list item as an entry and its children.'''
+    '''Read the `blocks` of one list item as an entry and its children.
+
+    An entry is named by everything SUMMARY.md wrote on the line, not by the
+    link alone: `M 08/31: Topic bazaar/[development tools](tools.md)` reads in
+    the outline exactly as it was written there, and the first link on the
+    line says where the row leads.
+    '''
     text: Json = next((b['c'] for b in blocks if b['t'] in ('Plain', 'Para')), [])
     links = find_links(text)
-    # A Link's contents are [attributes, the title, [destination, tooltip]].
-    _, title, (destination, _) = links[0]['c'] if links else (None, text, ('', ''))
+    # A Link's contents are [attributes, its text, [destination, tooltip]].
+    _, _, (destination, _) = links[0]['c'] if links else (None, None, ('', ''))
     return TocNode(
-        title=inline_text(title),
-        html=inline_html(title),
-        destination=read_destination(destination) if links else None,
+        title=inline_text(text),
+        html=inline_html(text),
+        destination=read_destination(destination) if destination else None,
         children=[read_entry(item) for block in blocks
                   for item in list_items(block)])
 
