@@ -8,6 +8,7 @@
 from argparse import ArgumentParser
 from collections.abc import Iterator
 from dataclasses import dataclass, field
+from difflib import get_close_matches
 from html import escape
 from functools import partial
 from http import HTTPStatus
@@ -84,8 +85,24 @@ def is_external(sheet: str) -> bool:
 
 ##### SUMMARY.md File Reading ##################################################
 
-# Where an entry leads: a chapter under src/, an external URL, or nowhere.
+# Where an entry leads: a file in the book, an external URL, or nowhere.
 type Destination = Path | str | None
+
+def is_chapter(destination: Path) -> bool:
+    '''Whether `destination` names a Markdown chapter.
+
+    Only Markdown is rendered into pages. Anything else an entry links to - a
+    PDF handout, a zip of starter code - is published as it stands, and the
+    entry opens the file itself.
+
+    The two are written differently, because they are two different things. A
+    chapter is a source to be built, so it is named by its path under src/,
+    as every other chapter path in a book is. A file is not built at all: it
+    is named by its path in the finished book, which is the path a reader's
+    browser asks for and the path book.yml uses for a stylesheet, and the
+    build publishes it there from whichever tree it came out of.
+    '''
+    return destination.suffix.lower() == '.md'
 
 @dataclass
 class TocNode:
@@ -278,12 +295,16 @@ def read_summary_file(path: Path) -> Toc:
                     read_entry(item) for item in list_items(block)]
     return root.children
 
-def chapters(nodes: Nodes) -> Iterator[tuple[Path, TocNode]]:
-    '''Every chapter source at or beneath `nodes`, and its entry, in order.'''
+def destinations(nodes: Nodes) -> Iterator[tuple[Path, TocNode]]:
+    '''Every file named at or beneath `nodes`, and its entry, in order.'''
     for node in nodes:
         if isinstance(node.destination, Path):
             yield node.destination, node
-        yield from chapters(node.children)
+        yield from destinations(node.children)
+
+def chapters(nodes: Nodes) -> Iterator[tuple[Path, TocNode]]:
+    '''Every Markdown chapter at or beneath `nodes`, and its entry, in order.'''
+    return ((path, node) for path, node in destinations(nodes) if is_chapter(path))
 
 def read_front_matter(path: Path) -> dict[str, Any]:
     '''Read the YAML metadata block at the top of `path`, if it has one.'''
@@ -362,10 +383,10 @@ class Book:
         '''The directory holding files copied into the build unchanged.'''
         return self.root / ASSETS_DIR
 
-    def under_assets(self, sheet: str) -> bool:
-        '''Whether `sheet` names a file inside the assets directory.'''
+    def under_assets(self, path: str | Path) -> bool:
+        '''Whether `path`, read from the book's root, is inside assets/.'''
         try:
-            return (self.root / sheet).resolve().is_relative_to(
+            return (self.root / path).resolve().is_relative_to(
                 self.assets_dir.resolve())
         except OSError:
             return False
@@ -383,6 +404,11 @@ class Book:
                 *(p for p in self.assets_dir.rglob('*') if p.is_file())]
 
     @property
+    def destinations(self) -> list[tuple[Path, TocNode]]:
+        '''Every file named anywhere in the table of contents, and its entry.'''
+        return list(destinations(self.toc))
+
+    @property
     def chapters(self) -> list[tuple[Path, TocNode]]:
         '''Every chapter named anywhere in the table of contents, and its entry.'''
         return list(chapters(self.toc))
@@ -396,9 +422,32 @@ class Book:
         '''The HTML file built from the chapter source at `chapter`.'''
         return self.book_dir / chapter.with_suffix('.html')
 
-    def link(self, chapter: Path, page: Path) -> str:
-        '''Link to `chapter` as a URL relative to the page at `page`.'''
-        return os.path.relpath(self.page(chapter), page.parent).replace(os.sep, '/')
+    def source(self, destination: Path) -> Path:
+        '''The file in the project that the entry leading to `destination` needs.
+
+        A chapter is a Markdown source under src/. A file is named by where it
+        lands in the built book, so it comes from whichever tree puts it
+        there: assets/, which keeps its own name, or src/, whose name is
+        stripped. `assets/pdf/syllabus.pdf` is therefore the project's own
+        assets/pdf/syllabus.pdf, and `pdf/syllabus.pdf` is src/pdf/syllabus.pdf.
+        '''
+        if not is_chapter(destination) and self.under_assets(destination):
+            return self.root / destination
+        return self.src_dir / destination
+
+    def target(self, destination: Path) -> Path:
+        '''The file in the build that the entry leading to `destination` opens.
+
+        A chapter opens the page built from it; a file opens itself, at the
+        path in the book that named it.
+        '''
+        return self.page(destination) if is_chapter(destination) \
+            else self.book_dir / destination
+
+    def link(self, destination: Path, page: Path) -> str:
+        '''Link to `destination` as a URL relative to the page at `page`.'''
+        return os.path.relpath(self.target(destination),
+                               page.parent).replace(os.sep, '/')
 
     def root_prefix(self, page: Path) -> str:
         '''The path back to the book's root from the page at `page`.
@@ -413,7 +462,7 @@ class Book:
 def is_current_page(node: TocNode, book: 'Book', page: Path) -> bool:
     '''Whether `node` points at the page currently being rendered.'''
     return (isinstance(node.destination, Path) and node.visible
-            and book.page(node.destination) == page)
+            and book.target(node.destination) == page)
 
 # Drawn once in the template, referenced by every toggle, rather than repeating
 # the path data for each of what may be a hundred rows.
@@ -424,9 +473,10 @@ def render_label(node: TocNode, book: Book, page: Path) -> str:
     '''Render a node's title, as a link when it leads somewhere visible.'''
     title = node.html
     match node.destination:
-        case Path() as chapter if node.visible:
-            href = escape(book.link(chapter, page), quote=True)
-            current = ' aria-current="page"' if book.page(chapter) == page else ''
+        case Path() as destination if node.visible:
+            href = escape(book.link(destination, page), quote=True)
+            current = (' aria-current="page"'
+                       if book.target(destination) == page else '')
             return f'<a class="toc-link" href="{href}"{current}>{title}</a>'
         case str() as url:
             return f'<a class="toc-link" href="{escape(url, quote=True)}">{title}</a>'
@@ -504,6 +554,19 @@ def render_toc(book: Book, page: Path) -> str:
     '''Render the whole table of contents, with links relative to `page`.'''
     return f'<div class="toc">{render_nodes(book.toc, book, page)}</div>'
 
+def suggest(missing: Path) -> str:
+    '''A hint naming the file beside `missing` that was most likely meant.
+
+    A link to a file that is not there is nearly always a slip in its name
+    rather than in its directory, so only the directory it was looked for in
+    is searched. With nothing close enough there, the hint is empty.
+    '''
+    if not missing.parent.is_dir():
+        return ''
+    names = [path.name for path in missing.parent.iterdir() if path.is_file()]
+    close = get_close_matches(missing.name, names, n=1)
+    return f'; did you mean {close[0]}?' if close else ''
+
 def read_book(root: Path) -> Book:
     '''Read the book project rooted at `root`.'''
     config = read_configuration(root / 'book.yml')
@@ -517,6 +580,16 @@ def read_book(root: Path) -> Book:
         raise BookError(f'defaultFoldedLevel must be a whole number from 1 to '
                         f'{UNFOLDED}, not {level!r}')
     book = Book(root, config, toc)
+    # An entry that leads nowhere real is a dead row in every page's outline,
+    # so check the lot before writing any of them. A file is named by its path
+    # in the built book, so a missing one is usually a path written as though
+    # it were relative to src/: say which file was looked for, not just which
+    # path was written.
+    for destination, _ in book.destinations:
+        source = book.source(destination)
+        if not source.is_file():
+            raise BookError(f'SUMMARY.md links to {destination}, but '
+                            f'{source} does not exist{suggest(source)}')
     # A stylesheet is named by its path from the book root, which is also its
     # path in the build. Only assets/ is copied, so a file anywhere else would
     # leave a link pointing at nothing; say so rather than shipping that.
@@ -586,14 +659,13 @@ def copy_assets(book: Book) -> None:
 
 def build(book: Book) -> None:
     '''Render every chapter, then copy the assets and remaining sources.'''
+    # A file the outline links to needs no work here: it is already under
+    # assets/ or src/, and the copying below carries it into the build.
     for chapter, entry in book.chapters:
-        source = book.src_dir / chapter
-        if not source.is_file():
-            raise BookError(f'{source} is listed in SUMMARY.md but does not exist')
-        convert(source, book.page(chapter), entry, book)
+        convert(book.source(chapter), book.page(chapter), entry, book)
     copy_assets(book)
     for asset in book.src_dir.rglob('*'):
-        if asset.is_file() and asset.suffix != '.md':
+        if asset.is_file() and not is_chapter(asset):
             destination = book.book_dir / asset.relative_to(book.src_dir)
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(asset, destination)
